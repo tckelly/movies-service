@@ -1,7 +1,7 @@
 package com.github.tkelly.movies.controller;
 
-import com.github.tkelly.movies.Movie;
-import com.github.tkelly.movies.exception.MovieNotFoundException;
+import com.github.tkelly.movies.dto.MovieRequest;
+import com.github.tkelly.movies.dto.MovieResponse;
 import com.github.tkelly.movies.service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +17,14 @@ public class MovieController {
     }
 
     @GetMapping("/{movieId}")
-    public Movie getMovie(final @PathVariable Long movieId) {
-        return movieService.readMovieById(movieId)
-                .orElseThrow(() -> new MovieNotFoundException("Movie not found with id: " + movieId));
+    public MovieResponse getMovie(final @PathVariable Long movieId) {
+        return movieService.readMovieById(movieId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Movie saveMovie(final @RequestBody Movie movie) {
-        return movieService.saveMovie(movie);
+    public MovieResponse saveMovie(final @RequestBody MovieRequest movieRequest) {
+        return movieService.saveMovie(movieRequest);
     }
 
     @DeleteMapping("/{movieId}")

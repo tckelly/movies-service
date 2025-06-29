@@ -1,12 +1,13 @@
 package com.github.tkelly.movies.service;
 
 import com.github.tkelly.movies.Movie;
-import com.github.tkelly.movies.repository.MovieRepository;
+import com.github.tkelly.movies.dto.MovieRequest;
+import com.github.tkelly.movies.dto.MovieResponse;
 import com.github.tkelly.movies.exception.MovieNotFoundException;
+import com.github.tkelly.movies.repository.MovieRepository;
+import com.github.tkelly.movies.translator.MovieTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -17,14 +18,17 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Movie> readMovieById(final Long id) {
-        return movieRepository.findById(id);
+    public MovieResponse readMovieById(final Long movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new MovieNotFoundException("Movie not found with movieId: " + movieId));
+
+        return MovieTranslator.toResponse(movie);
     }
 
     @Transactional
-    public Movie saveMovie(Movie movie) {
-        // todo use separate API objects and entity objects
-        return movieRepository.save(movie);
+    public MovieResponse saveMovie(MovieRequest movieRequest) {
+        Movie movie = MovieTranslator.toEntity(movieRequest);
+        return MovieTranslator.toResponse(movieRepository.save(movie));
     }
 
     @Transactional

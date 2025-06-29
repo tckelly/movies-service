@@ -1,6 +1,9 @@
 package com.github.tkelly.movies.service;
 
 import com.github.tkelly.movies.Movie;
+import com.github.tkelly.movies.dto.MovieRequest;
+import com.github.tkelly.movies.dto.MovieResponse;
+import com.github.tkelly.movies.exception.MovieNotFoundException;
 import com.github.tkelly.movies.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,13 +13,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MovieServiceTest {
+    private static final String TITLE = "title";
+    private static final int RELEASE_YEAR = 2000;
 
     @Mock
     private MovieRepository movieRepository;
@@ -26,33 +30,68 @@ class MovieServiceTest {
 
     @Test
     void saveMovie() {
-        Movie movie = new Movie();
-        when(movieRepository.save(movie)).thenReturn(movie);
+        MovieRequest movieRequest = getMovieRequest();
+        Movie movie = getMovie();
+        when(movieRepository.save(any(Movie.class))).thenReturn(movie);
 
-        Movie actual = subject.saveMovie(movie);
+        MovieResponse actual = subject.saveMovie(movieRequest);
 
         assertNotNull(actual);
+        assertEquals(TITLE, actual.getTitle());
         verify(movieRepository).save(any(Movie.class));
     }
 
+
     @Test
     void readMovieById() {
-        when(movieRepository.findById(123L)).thenReturn(Optional.of(new Movie()));
-        Movie movie = subject.readMovieById(123L).get();
+        Movie movie = getMovie();
+        when(movieRepository.findById(123L)).thenReturn(Optional.of(movie));
 
-        assertNotNull(movie);
+        MovieResponse actual = subject.readMovieById(123L);
+
+        assertNotNull(actual);
+        assertEquals(TITLE, actual.getTitle());
         verify(movieRepository).findById(123L);
     }
 
     @Test
-    void deleteMovieById() {
-        Movie movie = new Movie();
-        movie.setId(345L);
-        when(movieRepository.existsById(345L)).thenReturn(Boolean.TRUE);
+    void readMovieById_whenDoesNotExist_throwsException() {
+        assertThrows(MovieNotFoundException.class, () -> subject.readMovieById(123L));
 
-        subject.deleteMovieById(movie.getId());
-
-        verify(movieRepository).deleteById(345L);
+        verify(movieRepository).findById(123L);
     }
 
+    @Test
+    void deleteMovieById_whenExists() {
+        long movieId = 345L;
+        when(movieRepository.existsById(movieId)).thenReturn(Boolean.TRUE);
+
+        subject.deleteMovieById(movieId);
+
+        verify(movieRepository).deleteById(movieId);
+    }
+
+    @Test
+    void deleteMovieById_whenDoesNotExist_throwsException() {
+        long movieId = 345L;
+        when(movieRepository.existsById(movieId)).thenReturn(Boolean.FALSE);
+
+        assertThrows(MovieNotFoundException.class, () -> subject.deleteMovieById(movieId));
+
+        verify(movieRepository, never()).deleteById(movieId);
+    }
+
+    private static MovieRequest getMovieRequest() {
+        MovieRequest movieRequest = new MovieRequest();
+        movieRequest.setTitle(TITLE);
+        movieRequest.setReleaseYear(RELEASE_YEAR);
+        return movieRequest;
+    }
+
+    private static Movie getMovie() {
+        Movie movie = new Movie();
+        movie.setReleaseYear(RELEASE_YEAR);
+        movie.setTitle(TITLE);
+        return movie;
+    }
 }
