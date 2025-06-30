@@ -62,10 +62,23 @@ class MovieControllerTest {
     }
 
     @Test
-    void shouldGetMovieById() throws Exception {
+    void shouldReadMovieById() throws Exception {
         when(movieService.getMovieById(1L)).thenReturn(movieResponse);
 
         mockMvc.perform(get("/movies/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.title", is(TITLE)))
+                .andExpect(jsonPath("$.releaseYear", is(RELEASE_YEAR)));
+    }
+
+    @Test
+    void shouldUpdateMovie() throws Exception {
+        when(movieService.saveMovie(any(MovieRequest.class))).thenReturn(movieResponse);
+
+        mockMvc.perform(put("/movies/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(movieRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is(TITLE)))
