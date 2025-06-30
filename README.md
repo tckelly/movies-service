@@ -28,7 +28,6 @@ A simple Spring Boot RESTful API for managing a movie database, demonstrating be
 ### Prerequisites
 
 - Java 17+
-- Maven 3.8+
 - Git
 
 ### Clone and Run
