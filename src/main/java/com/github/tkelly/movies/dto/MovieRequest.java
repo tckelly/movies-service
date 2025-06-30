@@ -1,8 +1,17 @@
 package com.github.tkelly.movies.dto;
 
 public class MovieRequest {
+    private long id;
     private String title;
     private int releaseYear;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
