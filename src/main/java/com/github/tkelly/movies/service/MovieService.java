@@ -18,7 +18,7 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public MovieResponse readMovieById(final Long movieId) {
+    public MovieResponse getMovieById(final Long movieId) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new MovieNotFoundException("Movie not found with movieId: " + movieId));
 

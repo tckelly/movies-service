@@ -43,11 +43,11 @@ class MovieServiceTest {
 
 
     @Test
-    void readMovieById() {
+    void getMovieById() {
         Movie movie = getMovie();
         when(movieRepository.findById(123L)).thenReturn(Optional.of(movie));
 
-        MovieResponse actual = subject.readMovieById(123L);
+        MovieResponse actual = subject.getMovieById(123L);
 
         assertNotNull(actual);
         assertEquals(TITLE, actual.getTitle());
@@ -55,8 +55,8 @@ class MovieServiceTest {
     }
 
     @Test
-    void readMovieById_whenDoesNotExist_throwsException() {
-        assertThrows(MovieNotFoundException.class, () -> subject.readMovieById(123L));
+    void getMovieById_whenDoesNotExist_throwsException() {
+        assertThrows(MovieNotFoundException.class, () -> subject.getMovieById(123L));
 
         verify(movieRepository).findById(123L);
     }
