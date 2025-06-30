@@ -17,8 +17,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MovieNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleMovieNotFound(MovieNotFoundException ex) {
-        return ex.getMessage();
+    public Map<String, String> handleMovieNotFoundException(MovieNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -34,5 +36,13 @@ public class GlobalExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleGenericException(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Unexpected error occurred");
+        return error;
     }
 }
