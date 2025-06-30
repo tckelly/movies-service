@@ -31,7 +31,7 @@ class MovieServiceTest {
     @Test
     void saveMovie() {
         MovieRequest movieRequest = getMovieRequest();
-        Movie movie = getMovie();
+        Movie movie = getMovie(123L);
         when(movieRepository.save(any(Movie.class))).thenReturn(movie);
 
         MovieResponse actual = subject.saveMovie(movieRequest);
@@ -44,7 +44,7 @@ class MovieServiceTest {
 
     @Test
     void getMovieById() {
-        Movie movie = getMovie();
+        Movie movie = getMovie(123L);
         when(movieRepository.findById(123L)).thenReturn(Optional.of(movie));
 
         MovieResponse actual = subject.getMovieById(123L);
@@ -88,8 +88,9 @@ class MovieServiceTest {
         return movieRequest;
     }
 
-    private static Movie getMovie() {
+    private static Movie getMovie(long id) {
         Movie movie = new Movie();
+        movie.setId(id);
         movie.setReleaseYear(RELEASE_YEAR);
         movie.setTitle(TITLE);
         return movie;

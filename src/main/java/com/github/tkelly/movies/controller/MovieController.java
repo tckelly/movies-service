@@ -5,7 +5,6 @@ import com.github.tkelly.movies.dto.MovieResponse;
 import com.github.tkelly.movies.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +34,8 @@ public class MovieController {
             summary = "Get a movie by ID",
             description = "Retrieves a movie by its ID."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Movie retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Movie not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Movie retrieved successfully")
+    @ApiResponse(responseCode = "404", description = "Movie not found")
     @GetMapping("/{movieId}")
     @ResponseStatus(HttpStatus.OK)
     public MovieResponse readMovie(final @PathVariable Long movieId) {
@@ -49,10 +46,8 @@ public class MovieController {
             summary = "Update an existing movie",
             description = "Updates a movie's data. The movie must already exist and the ID must be provided."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Movie updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Movie not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Movie updated successfully")
+    @ApiResponse(responseCode = "404", description = "Movie not found")
     @PutMapping("/{movieId}")
     @ResponseStatus(HttpStatus.OK)
     public MovieResponse updateMovie(
@@ -67,10 +62,8 @@ public class MovieController {
             summary = "Delete a movie by ID",
             description = "Deletes a movie and returns the deleted movie's details."
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Movie deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Movie not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Movie deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Movie not found")
     @DeleteMapping("/{movieId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(final @PathVariable Long movieId) {

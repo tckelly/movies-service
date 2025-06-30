@@ -5,9 +5,10 @@ import com.github.tkelly.movies.dto.MovieRequest;
 import com.github.tkelly.movies.dto.MovieResponse;
 
 public class MovieTranslator {
+    private MovieTranslator() {}
+
     public static Movie toEntity(MovieRequest request) {
         Movie movie = new Movie();
-        movie.setId(request.getId());
         movie.setTitle(request.getTitle());
         movie.setReleaseYear(request.getReleaseYear());
         return movie;
