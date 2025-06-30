@@ -1,8 +1,13 @@
 package com.github.tkelly.movies.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class MovieRequest {
     private long id;
+    @NotBlank(message = "Title cannot be blank.")
     private String title;
+    @NotNull(message = "Release year cannot be null.")
     private int releaseYear;
 
     public long getId() {

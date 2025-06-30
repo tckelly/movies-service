@@ -6,6 +6,7 @@ import com.github.tkelly.movies.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class MovieController {
     @ApiResponse(responseCode = "201", description = "Movie created successfully")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MovieResponse createMovie(final @RequestBody MovieRequest movieRequest) {
+    public MovieResponse createMovie(final @Valid @RequestBody MovieRequest movieRequest) {
         return movieService.saveMovie(movieRequest);
     }
 
@@ -56,7 +57,7 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     public MovieResponse updateMovie(
             @PathVariable Long movieId,
-            @RequestBody MovieRequest request
+            @Valid @RequestBody MovieRequest request
     ) {
         request.setId(movieId);
         return movieService.saveMovie(request);
